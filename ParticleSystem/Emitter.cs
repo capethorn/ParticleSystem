@@ -31,7 +31,13 @@ namespace ParticleSystem
         public float GravitationY = 0;
         public List<IImpactPoint> impactPoints = new List<IImpactPoint>();
         public int ParticlesCount = 500;
-        
+
+
+        public void RemoveImpactPoint(IImpactPoint point)
+        {
+            impactPoints.Remove(point);
+        }
+
         public virtual void ResetParticle(Particle particle)
         {
             particle.Life = Particle.rand.Next(LifeMin, LifeMax);
@@ -53,7 +59,7 @@ namespace ParticleSystem
 
         public void UpdateState()
         {
-            int particlesToCreate = ParticlesPerTick; // фиксируем счетчик сколько частиц нам создавать за тик
+            int particlesToCreate = ParticlesPerTick;
 
             foreach (var particle in particles)
             {

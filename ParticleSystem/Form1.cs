@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
 using static ParticleSystem.IImpactPoint;
 using static ParticleSystem.Particle;
 
@@ -7,81 +11,89 @@ namespace ParticleSystem
     {
         List<Emitter> emitters = new List<Emitter>();
         Emitter emitter;
-        GravityPoint point1; // добавил поле под первую точку
-        GravityPoint point2; // добавил поле под вторую точку
+        GravityPoint point1;
+        GravityPoint point2;
 
-        //List<Particle> particles = new List<Particle>();
+        List<CounterPoint> counters = new List<CounterPoint>();
+
         public Form1()
         {
             InitializeComponent();
-
             picDisplay.Image = new Bitmap(picDisplay.Width, picDisplay.Height);
 
-            this.emitter = new Emitter // создаю эмиттер и привязываю его к полю emitter
+            this.emitter = new Emitter
             {
                 Direction = 0,
-                Spreading = 10,
-                SpeedMin = 10,
-                SpeedMax = 10,
+                Spreading = 360,
+                SpeedMin = 3,
+                SpeedMax = 8,
                 ColorFrom = Color.Gold,
                 ColorTo = Color.FromArgb(0, Color.Red),
-                ParticlesPerTick = 10,
+                ParticlesPerTick = 8,
                 X = picDisplay.Width / 2,
                 Y = picDisplay.Height / 2,
-                GravitationY = 0.3f
+                GravitationY = 0.1f,
+                GravitationX = 0
             };
 
-            emitters.Add(this.emitter); // все равно добавляю в список emitters, чтобы он рендерился и обновлялся
+            emitters.Add(this.emitter);
 
             point1 = new GravityPoint
             {
-                X = picDisplay.Width / 2 + 100,
+                X = picDisplay.Width / 2 + 150,
                 Y = picDisplay.Height / 2,
+                Power = 80
             };
             point2 = new GravityPoint
             {
-                X = picDisplay.Width / 2 - 100,
+                X = picDisplay.Width / 2 - 150,
                 Y = picDisplay.Height / 2,
+                Power = 80
             };
 
-            // привязываем поля к эмиттеру
             emitter.impactPoints.Add(point1);
             emitter.impactPoints.Add(point2);
+
+            this.picDisplay.MouseClick += new MouseEventHandler(picDisplay_MouseClick);
         }
 
-        // emitter = new TopEmitter
-        // {
-        //     Width = picDisplay.Width,
-        //     GravitationY = 0.25f
-        // };
+        private void picDisplay_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                var counter = new CounterPoint
+                {
+                    X = e.X,
+                    Y = e.Y,
+                    Counter = 0
+                };
 
-        // emitter.impactPoints.Add(new GravityPoint
-        // {
-        //     X = (float)(picDisplay.Width * 0.25),
-        //     Y = picDisplay.Height / 2
-        // });
+                counters.Add(counter);
+                emitter.impactPoints.Add(counter);
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                CounterPoint clickedCounter = null;
+                foreach (var counter in counters)
+                {
+                    float dx = counter.X - e.X;
+                    float dy = counter.Y - e.Y;
+                    double dist = Math.Sqrt(dx * dx + dy * dy);
 
-        // // в центре антигравитон
-        // emitter.impactPoints.Add(new AntiGravityPoint
-        // {
-        //     X = picDisplay.Width / 2,
-        //     Y = picDisplay.Height / 2
-        // });
+                    if (dist < 30)
+                    {
+                        clickedCounter = counter;
+                        break;
+                    }
+                }
 
-        // //снова гравитон
-
-        //emitter.impactPoints.Add(new GravityPoint
-        // {
-        //     X = (float)(picDisplay.Width * 0.75),
-        //     Y = picDisplay.Height / 2
-        // });
-        //}
-
-
-
-
-
-
+                if (clickedCounter != null)
+                {
+                    counters.Remove(clickedCounter);
+                    emitter.impactPoints.Remove(clickedCounter);
+                }
+            }
+        }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -98,13 +110,12 @@ namespace ParticleSystem
 
         private void picDisplay_MouseMove(object sender, MouseEventArgs e)
         {
-            foreach(var emitter in emitters)
-    {
+            foreach (var emitter in emitters)
+            {
                 emitter.MousePositionX = e.X;
                 emitter.MousePositionY = e.Y;
             }
 
-            // а тут передаем положение мыши, в положение гравитона
             point2.X = e.X;
             point2.Y = e.Y;
         }
