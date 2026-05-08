@@ -29,11 +29,41 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            picDisplay = new PictureBox();
+            timer1 = new System.Windows.Forms.Timer(components);
+            ((System.ComponentModel.ISupportInitialize)picDisplay).BeginInit();
+            SuspendLayout();
+            // 
+            // picDisplay
+            // 
+            picDisplay.Location = new Point(12, 12);
+            picDisplay.Name = "picDisplay";
+            picDisplay.Size = new Size(776, 426);
+            picDisplay.TabIndex = 0;
+            picDisplay.TabStop = false;
+            picDisplay.MouseMove += picDisplay_MouseMove;
+            // 
+            // timer1
+            // 
+            timer1.Enabled = true;
+            timer1.Interval = 40;
+            timer1.Tick += timer1_Tick;
+            // 
+            // Form1
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(picDisplay);
+            Name = "Form1";
             Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)picDisplay).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private PictureBox picDisplay;
+        private System.Windows.Forms.Timer timer1;
     }
 }
