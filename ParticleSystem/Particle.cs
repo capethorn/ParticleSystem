@@ -14,18 +14,15 @@ namespace ParticleSystem
         public float Direction;
         public float Speed;
 
-
-        public float SpeedX; 
+        public float SpeedX;
         public float SpeedY;
 
         public float Life;
 
         public static Random rand = new Random();
 
-
         public Particle()
         {
-
             var direction = (double)rand.Next(360);
             var speed = 1 + rand.Next(10);
 
@@ -36,15 +33,14 @@ namespace ParticleSystem
             Life = 20 + rand.Next(100);
         }
 
-        public  virtual void Draw(Graphics g)
-        { 
+        public virtual void Draw(Graphics g)
+        {
             float k = Math.Min(1f, Life / 100);
             int alpha = (int)(k * 255);
 
             var color = Color.FromArgb(alpha, Color.Black);
             var b = new SolidBrush(color);
 
-          
             g.FillEllipse(b, X - Radius, Y - Radius, Radius * 2, Radius * 2);
 
             b.Dispose();
@@ -54,6 +50,7 @@ namespace ParticleSystem
         {
             public Color FromColor;
             public Color ToColor;
+            public bool IsInRadar = false;
 
             public static Color MixColor(Color color1, Color color2, float k)
             {
@@ -68,12 +65,15 @@ namespace ParticleSystem
             public override void Draw(Graphics g)
             {
                 float k = Math.Min(1f, Life / 100);
-
                 var color = MixColor(ToColor, FromColor, k);
+
+                if (IsInRadar)
+                {
+                    color = Color.FromArgb(color.A, Color.Lime);
+                }
+
                 var b = new SolidBrush(color);
-
                 g.FillEllipse(b, X - Radius, Y - Radius, Radius * 2, Radius * 2);
-
                 b.Dispose();
             }
         }

@@ -13,8 +13,9 @@ namespace ParticleSystem
         Emitter emitter;
         GravityPoint point1;
         GravityPoint point2;
-
         List<CounterPoint> counters = new List<CounterPoint>();
+        RadarPoint radar;
+        Label lblRadarRadius;
 
         public Form1()
         {
@@ -24,7 +25,7 @@ namespace ParticleSystem
             this.emitter = new Emitter
             {
                 Direction = 0,
-                Spreading = 360,
+                Spreading = 50,
                 SpeedMin = 3,
                 SpeedMax = 8,
                 ColorFrom = Color.Gold,
@@ -51,10 +52,39 @@ namespace ParticleSystem
                 Power = 80
             };
 
+            radar = new RadarPoint
+            {
+                X = picDisplay.Width / 2,
+                Y = picDisplay.Height / 2,
+                Radius = 80,
+                RadarColor = Color.Lime
+            };
+
             emitter.impactPoints.Add(point1);
             emitter.impactPoints.Add(point2);
+            emitter.impactPoints.Add(radar);
 
             this.picDisplay.MouseClick += new MouseEventHandler(picDisplay_MouseClick);
+            this.picDisplay.MouseWheel += new MouseEventHandler(picDisplay_MouseWheel);
+
+            lblRadarRadius = new Label()
+            {
+                Text = $"Радар: {radar.Radius}px",
+                Location = new Point(10, 10),
+                AutoSize = true,
+                ForeColor = Color.White,
+                BackColor = Color.FromArgb(100, 0, 0, 0),
+                Font = new Font("Arial", 9)
+            };
+            this.Controls.Add(lblRadarRadius);
+        }
+
+        private void picDisplay_MouseWheel(object sender, MouseEventArgs e)
+        {
+            radar.Radius -= e.Delta / 120 * 10;
+            if (radar.Radius < 30) radar.Radius = 30;
+            if (radar.Radius > 200) radar.Radius = 200;
+            lblRadarRadius.Text = $"Радар: {radar.Radius}px";
         }
 
         private void picDisplay_MouseClick(object sender, MouseEventArgs e)
