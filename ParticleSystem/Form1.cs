@@ -15,7 +15,9 @@ namespace ParticleSystem
         GravityPoint point2;
         List<CounterPoint> counters = new List<CounterPoint>();
         RadarPoint radar;
+        RepulsionPoint repulsion;
         Label lblRadarRadius;
+        Label lblRepulsionRadius;
 
         public Form1()
         {
@@ -60,31 +62,63 @@ namespace ParticleSystem
                 RadarColor = Color.Lime
             };
 
+            repulsion = new RepulsionPoint
+            {
+                X = picDisplay.Width / 2,
+                Y = picDisplay.Height / 2,
+                Radius = 60,
+                Power = 200
+            };
+
             emitter.impactPoints.Add(point1);
             emitter.impactPoints.Add(point2);
             emitter.impactPoints.Add(radar);
+            emitter.impactPoints.Add(repulsion);
 
             this.picDisplay.MouseClick += new MouseEventHandler(picDisplay_MouseClick);
             this.picDisplay.MouseWheel += new MouseEventHandler(picDisplay_MouseWheel);
 
             lblRadarRadius = new Label()
             {
-                Text = $"Радар: {radar.Radius}px",
+                Text = $"Радар радиус: {radar.Radius}px",
                 Location = new Point(10, 10),
                 AutoSize = true,
-                ForeColor = Color.White,
+                ForeColor = Color.Lime,
                 BackColor = Color.FromArgb(100, 0, 0, 0),
                 Font = new Font("Arial", 9)
             };
             this.Controls.Add(lblRadarRadius);
+
+            lblRepulsionRadius = new Label()
+            {
+                Text = $"Отбивалка радиус: {repulsion.Radius}px",
+                Location = new Point(10, 30),
+                AutoSize = true,
+                ForeColor = Color.Cyan,
+                BackColor = Color.FromArgb(100, 0, 0, 0),
+                Font = new Font("Arial", 9)
+            };
+            this.Controls.Add(lblRepulsionRadius);
         }
 
         private void picDisplay_MouseWheel(object sender, MouseEventArgs e)
         {
-            radar.Radius -= e.Delta / 120 * 10;
-            if (radar.Radius < 30) radar.Radius = 30;
-            if (radar.Radius > 200) radar.Radius = 200;
-            lblRadarRadius.Text = $"Радар: {radar.Radius}px";
+            if (ModifierKeys == Keys.Control)
+            {
+                // Ctrl + колесико - меняем радар
+                radar.Radius -= e.Delta / 120 * 10;
+                if (radar.Radius < 30) radar.Radius = 30;
+                if (radar.Radius > 200) radar.Radius = 200;
+                lblRadarRadius.Text = $"Радар радиус: {radar.Radius}px";
+            }
+            else
+            {
+                // просто колесико - меняем отбивалку
+                repulsion.Radius -= e.Delta / 120 * 10;
+                if (repulsion.Radius < 30) repulsion.Radius = 30;
+                if (repulsion.Radius > 150) repulsion.Radius = 150;
+                lblRepulsionRadius.Text = $"Отбивалка радиус: {repulsion.Radius}px";
+            }
         }
 
         private void picDisplay_MouseClick(object sender, MouseEventArgs e)
@@ -146,8 +180,8 @@ namespace ParticleSystem
                 emitter.MousePositionY = e.Y;
             }
 
-            point2.X = e.X;
-            point2.Y = e.Y;
+            repulsion.X = e.X;
+            repulsion.Y = e.Y;
         }
 
         private void tbDirection_Scroll(object sender, EventArgs e)

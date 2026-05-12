@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             picDisplay = new PictureBox();
             timer1 = new System.Windows.Forms.Timer(components);
             tbDirection = new TrackBar();
@@ -43,6 +44,7 @@
             // 
             // picDisplay
             // 
+            picDisplay.BackgroundImage = (Image)resources.GetObject("picDisplay.BackgroundImage");
             picDisplay.Location = new Point(12, 12);
             picDisplay.Name = "picDisplay";
             picDisplay.Size = new Size(776, 373);

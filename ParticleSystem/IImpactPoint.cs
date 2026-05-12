@@ -191,5 +191,44 @@ namespace ParticleSystem
                 font.Dispose();
             }
         }
+
+        public class RepulsionPoint : IImpactPoint
+        {
+            public int Radius = 60;
+            public int Power = 200;
+
+            public override void ImpactParticle(Particle particle)
+            {
+                float dx = particle.X - X;
+                float dy = particle.Y - Y;
+                double dist = Math.Sqrt(dx * dx + dy * dy);
+
+                if (dist + particle.Radius < Radius)
+                {
+                    float r2 = (float)Math.Max(10, dx * dx + dy * dy);
+                    particle.SpeedX += dx * Power / r2;
+                    particle.SpeedY += dy * Power / r2;
+                }
+            }
+
+            public override void Render(Graphics g)
+            {
+                using (var brush = new SolidBrush(Color.FromArgb(80, Color.Cyan)))
+                using (var pen = new Pen(Color.Cyan, 2))
+                {
+                    g.FillEllipse(brush, X - Radius, Y - Radius, Radius * 2, Radius * 2);
+                    g.DrawEllipse(pen, X - Radius, Y - Radius, Radius * 2, Radius * 2);
+                }
+
+                var text = $"ОТБИВАЛКА";
+                var font = new Font("Arial", 8, FontStyle.Bold);
+                var stringFormat = new StringFormat();
+                stringFormat.Alignment = StringAlignment.Center;
+                stringFormat.LineAlignment = StringAlignment.Center;
+
+                g.DrawString(text, font, new SolidBrush(Color.Cyan), X, Y - Radius - 5, stringFormat);
+                font.Dispose();
+            }
+        }
     }
 }
