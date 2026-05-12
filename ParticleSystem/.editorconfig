@@ -50,7 +50,6 @@ dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity
 
 # Предпочтения модификатора
 dotnet_style_require_accessibility_modifiers = for_non_interface_members
-
 # Выражения уровень предпочтения
 dotnet_prefer_system_hash_code = true
 dotnet_style_coalesce_expression = true

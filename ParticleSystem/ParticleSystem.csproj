@@ -23,4 +23,12 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\grisha\source\repos\ParticleSystem\ParticleSystem\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\grisha\source\repos\ParticleSystem\ParticleSystem\.editorconfig" />
+  </ItemGroup>
+
 </Project>
